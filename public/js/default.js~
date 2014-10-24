@@ -1,0 +1,80 @@
+$(function() {
+    $(".col2").hide().slideDown(600);
+    
+    var title = $('#title');
+    var genre = $('#genre');
+    var year = $('#year');
+    var duration = $('#duration');
+    
+    function errorMsg(object, msg) {
+        return $(object).addClass('error').html(msg);
+    }
+    
+    function addErrorClass(object, errorSpan, message) {
+        errorMsg(errorSpan, message);
+        $(object).removeClass('current_input').addClass('error_input');
+    }
+    
+    function rmErrorClass(object, errorSpan) {
+        object.removeClass('error_input');
+        errorMsg(errorSpan, '').removeClass('error');
+    }
+    
+    var minChar = 2;
+    var maxChar = 3;
+    var defaultGenre = 13;
+    
+    $('input').focus( function(){ $(this).addClass('current_input'); });
+    $('input').blur( function(){ $(this).removeClass('current_input'); });
+    
+    title.blur(function() {
+        var that = $(this);
+        var errorSpan = "#form-name";
+        
+        if( title.val() == '' || that.val().length < minChar ) {
+            addErrorClass(that, errorSpan, 'Naslov mora sadržavati mininalno 2 znaka');
+        } else if( that.val().length >= minChar ) {
+            rmErrorClass(that, errorSpan);
+        }
+    });
+    
+    genre.blur(function() {
+        if( $(this).val() == 0 ) {
+            $(this).val(defaultGenre);
+        }
+    });
+    
+    year.blur(function() {
+        var that = $(this);
+        var errorSpan = "#form-year";
+        
+        if( that.val() == 0 ) {
+            addErrorClass(that, errorSpan, 'Godina nije odabrana');
+        } else {
+            rmErrorClass(that, errorSpan);
+        }
+    });
+    
+    duration.blur(function() {
+        var that = $(this);
+        var errorSpan = "#form-duration";
+        
+        if( that.val() == '' ) {
+            addErrorClass(that, errorSpan, 'Upišite trajanje filma<br />');
+        }
+        else if( isNaN(that.val()) || that.val().length > maxChar ) {
+            addErrorClass(that, errorSpan, 'Trajanje mora biti broj ne veći od 3 znamenke');
+        } else {
+            rmErrorClass(that, errorSpan);
+        }
+    });
+    
+    $('#insert_movie_form').on('submit', function(e) {
+        if( title.val() == '' || year.val() == 0 || duration.val() == '' ) {
+            //alert('Error');
+            e.preventDefault();
+        }
+    });
+
+    
+});
