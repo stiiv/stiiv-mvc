@@ -5,3 +5,4 @@
 <p><?php echo $this->var_check($test2); ?></p>
 <p><?php echo $this->var_check($test3); ?></p>
 <p><?php echo $this->var_check($test4); ?></p>
+<p><?php echo $this->var_check($username); ?></p>
