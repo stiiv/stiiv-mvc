@@ -6,10 +6,21 @@ foreach(glob("includes/*.php") as $file) {
 }
 
 function __autoload($class) {
-    require_once "libs".DS.$class.".php";
+
+	// directories to include __autoload
+	$dirs = array(
+		"libs".DS,
+		"helpers".DS
+	);
+
+	foreach($dirs as $dir) {
+		$dir_class = $dir.$class.".php";
+
+		if(file_exists($dir_class)) {
+			require_once($dir_class);
+			return;
+		}
+	}
 }
 
 $app = new Bootstrap();
-//echo '<pre>';
-//print_r($_SERVER);
-//echo '</pre>';

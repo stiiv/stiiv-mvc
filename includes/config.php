@@ -5,11 +5,11 @@
  * DATABASE CONFIGURATION   *
  *                          *
  ****************************/
+$db_host = "localhost";
+$db_user = "root";
+$db_pass = "granaroot";
+$db_name = "kolekcija";
 
-define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "granaroot");
-define("DB_NAME", "kolekcija");
 
 /*************************
  *                       *
@@ -35,8 +35,8 @@ define("VIEWS", "views".DS);
 define("INCLUDES", "includes".DS);
 //TEMPLATES
 define("TEMPLATES", "templates".DS);
-define("HEADER", "public".DS.TEMPLATES."header.php");
-define("FOOTER", "public".DS.TEMPLATES."footer.php");
+define("HEADER", "includes".DS.TEMPLATES."header.php");
+define("FOOTER", "includes".DS.TEMPLATES."footer.php");
 //HTML <head> paths
 define("CSS", "public".DS."css".DS);
 define("JS", "public".DS."js".DS);
@@ -53,5 +53,11 @@ define("IMAGES", "public".DS."images".DS);
 
 // SUBMIT FORM
 define("FORM_SUBMIT", $_SERVER['REQUEST_METHOD']);
+// DEFAULT CONTROLLER
 define( "DEFAULT_CONTROLLER", strtolower($controller) );
+// Database configuration
+define("DB_HOST", $db_host);
+define("DB_USER", $db_user);
+define("DB_PASS", $db_pass);
+define("DB_NAME", $db_name);
 

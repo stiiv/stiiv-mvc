@@ -12,6 +12,7 @@ class Test extends Controller {
 			"test3" => "This is a test 3",
 			"test4" => "This is a test 4"
 		);
+		$paginate = new Pagination(1,5,20);
 		$this->data($array_view);
 		$this->view->render('test_view', false);
 	}

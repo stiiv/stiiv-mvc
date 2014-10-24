@@ -26,7 +26,7 @@ class Controller {
     }
 
     /**
-     * Abstract passing key/value pairs in $this->view->data array
+     * Abstract passing title in $this->view->data->title
      * @param string=variable/value separator '::' | array $view_data
      * @return mixed
      */
