@@ -42,11 +42,8 @@ class View {
      * @param $var
      * @return string
      */
-    /*public function var_check($var) {
-        foreach($this->data as $variable => $value) {
-            if($var == $value)
-            echo "{$variable} => {$value}<br />";
-        }
-    }*/
+    public function var_check(&$var) {
+        return isset($var) ? $var : '';
+    }
     
 }
