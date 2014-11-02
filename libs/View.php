@@ -2,9 +2,17 @@
 
 class View {
     
-    public $title, $data = array();
+    public $title, 
+           $data = array(),
+           $lang;
 
     public function __construct() {
+        $this->_set_title();
+        // LANGUAGE SETTINGS
+        $this->_display_lang();
+    }
+
+    protected function _set_title() {
 
         if(!isset($this->title)) {
             $title = explode('/', $_SERVER['REQUEST_URI']);
@@ -15,6 +23,24 @@ class View {
             }
             $this->title = ucfirst( $title );
         }
+    }
+
+    protected function _display_lang() {
+        // DISPLAY LANGUAGE SETTINGS
+        $languages = simplexml_load_file(INCLUDES.'languages.xml');
+        $eng = $languages->english;
+        $cro = $languages->croatian;
+
+        if( !isset($_GET['lang']) ) {
+            $this->lang = $cro;
+        } else {
+            $this->lang = $eng;
+        }
+
+        //pretty_print($this->lang, "Lang object");
+        // set session for language
+        $get_lang = isset($_GET['lang']) ? $_GET['lang'] : 'hr';
+        Session::set("lang", $get_lang);
     }
     
     /**

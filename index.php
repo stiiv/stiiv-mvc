@@ -23,4 +23,5 @@ function __autoload($class) {
 	}
 }
 
+// app init
 $app = new Bootstrap();
