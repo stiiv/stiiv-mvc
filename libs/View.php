@@ -30,17 +30,29 @@ class View {
         $languages = simplexml_load_file(INCLUDES.'languages.xml');
         $eng = $languages->english;
         $cro = $languages->croatian;
+        $get = "";
 
-        if( !isset($_GET['lang']) ) {
-            $this->lang = $cro;
+        if( isset($_GET['lang']) ) {
+            switch($_GET['lang']) {
+                case "en":
+                    $this->lang = $eng;
+                    $get = $_GET['lang'];
+                break;
+
+                default: 
+                    $this->lang = $cro;
+                    $get = $_GET['lang'];
+            }
+
         } else {
-            $this->lang = $eng;
+            $this->lang = $cro;
+            $get = $_GET['lang'] = "hr";
         }
+        Session::set("lang", $get);
 
         //pretty_print($this->lang, "Lang object");
         // set session for language
         $get_lang = isset($_GET['lang']) ? $_GET['lang'] : 'hr';
-        Session::set("lang", $get_lang);
     }
     
     /**
