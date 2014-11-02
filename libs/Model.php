@@ -14,7 +14,7 @@ class Model {
      * @return mixed
      */
     public function count_table($table) {
-        $sql = "SELECT COUNT(*) AS count FROM {$table}";
+        $sql = "SELECT COUNT(*) AS count FROM {$table} ";
         $results = $this->_db->query($sql)->getResults();
         return (int)$results[0]->count;
     }

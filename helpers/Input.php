@@ -223,21 +223,28 @@ class Input
  *
  ****************************************************************************/
 
-    // Grab the input value to return clean if it passed check method
-    protected $_input;
-
     // Array of available rules
     protected $_allowed_rules = array(
-        'required', 'email', 'minlength', 'maxlength', 'select', 'digit'
+        'required', 'email', 'minlength', 'maxlength', 'select', 'digit',
+        'match'
     );
 
     /**
      * Filter given string
-     * @param $input
+     * @param string $input
      * @return mixed|string
      */
     public function escape($input) {
         return is_string($input) ? filter_var($input, FILTER_SANITIZE_STRING) : "";
+    }
+
+    /**
+     * Hash given string
+     * @param string $string
+     * @return string
+     */
+    public function hash($string) {
+        return password_hash($string, PASSWORD_BCRYPT);
     }
 
     /**
@@ -265,7 +272,7 @@ class Input
             } elseif( is_string($rules) ) {}
         }
 
-        return $this;
+        return $this->escape( trim($input) );
 
     } // end check
 
@@ -277,6 +284,8 @@ class Input
      */
     protected function _validate($input, $field_name, $rules) {
         $encoding = 'UTF-8';
+        // get form name="" values
+        $request_keys = array_keys($_REQUEST);
 
         foreach($rules as $rule => $satisfier) {
 
@@ -287,20 +296,39 @@ class Input
                         return;
                     }
                     break;
+
                 case 'email':
                     ( !filter_var($input, FILTER_VALIDATE_EMAIL) ) ? $this->errorMsg[$field_name][] = 'Not valid email' : null;
                     break;
+
                 case 'minlength':
-                    (mb_strlen($input, $encoding) <= $satisfier) ? $this->errorMsg[$field_name][] = 'Too short' : null;
+                    (mb_strlen($input, $encoding) <= $satisfier) ? 
+                        $this->errorMsg[$field_name][] = "Too short. At least {$satisfier} characters required" : null;
                     break;
+
                 case 'maxlength':
-                    (mb_strlen($input, $encoding) >= $satisfier) ? $this->errorMsg[$field_name][] = 'Too long' : null;
+                    (mb_strlen($input, $encoding) >= $satisfier) ? 
+                        $this->errorMsg[$field_name][] = "Too long. Maximum {$satisfier} characters" : null;
                     break;
+
                 case 'select':
                     ($input < 1 || $input == null) ? $this->errorMsg[$field_name][] = 'Not selected' : null;
                     break;
+
                 case 'digit':
                     ( !is_numeric($input) ) ? $this->errorMsg[$field_name][] = 'Must contain only digits' : null;
+                    break;
+
+                case 'match':
+                    // check if the given satisfier is correct
+                    if( !in_array($satisfier, $request_keys) ) {
+                        $this->errorMsg[$field_name][] = "Satisfier '{$satisfier}' does not match any field";
+                        return;
+                    }
+
+                    if( $_REQUEST[$satisfier] != $input) {
+                        $this->errorMsg[$field_name][] = 'No match';
+                    }
                     break;
             }
         }
@@ -318,13 +346,6 @@ class Input
             }
         }
         return false;
-    }
-
-    /**
-     * @return mixed $this->_input
-     */
-    public function output() {
-        return isset($this->_input) ? $this->_input : null;
     }
 
     public function has_errors() {

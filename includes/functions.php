@@ -43,7 +43,7 @@ function pretty_print($val, $name = "Name", $color = "darkgreen") {
  * @return void
  */
 function redir_to($location) {
-    header("Location: {$location}");
+    header("Location: ".BASE_URL.$location);
 }
 
 /**
