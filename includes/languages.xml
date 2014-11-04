@@ -8,7 +8,11 @@
 		<general>
 			<name>Name</name>
 		</general>
-		<message></message>
+		<message>
+			<DBselected>Your database name is: </DBselected>
+			<noDB>Please edit database name in includes/cofig.php</noDB>
+			<welcome>Welcome</welcome>
+		</message>
 		<nav>
 			<home>Home</home>
 			<aboutUs>About Us</aboutUs>
@@ -23,7 +27,11 @@
 		<general>
 			<name>Ime</name>
 		</general>
-		<message></message>
+		<message>
+			<DBselected>Ime Vaše baze podataka:</DBselected>
+			<noDB>Molimo Vas, unseite ime baze podataka u includes/cofig.php datoteci </noDB>
+			<welcome>Dobrodošli</welcome>
+		</message>
 		<nav>
 			<home>Naslovna</home>
 			<aboutUs>O nama</aboutUs>

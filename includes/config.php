@@ -6,9 +6,9 @@
  *                          *
  ****************************/
 $db_host = "localhost";
-$db_user = "root";
-$db_pass = "granaroot";
-$db_name = "kolekcija";
+$db_user = "";
+$db_pass = "";
+$db_name = "";
 
 
 /*************************
