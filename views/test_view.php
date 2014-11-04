@@ -8,6 +8,7 @@
 
 	<h2><?php echo $this->var_check($this->title); ?></h2>
 	<h3><?php echo $subtitle; ?></h3>
+	<p><a href="http://stiiv.loc/stiiv-mvc/"><?php echo $this->lang->nav->home ?></a> <?php echo $nav; ?></p>
 	<p><?php echo $this->var_check($body); ?></p>
 	<p><?php echo $this->var_check($test); ?></p>
 	<p><?php echo $this->var_check($test2); ?></p>

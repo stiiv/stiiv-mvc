@@ -4,7 +4,10 @@ class View {
     
     public $title, 
            $data = array(),
-           $lang;
+           // display language for website elements
+           $lang,
+           // get html links for available languages
+           $lang_html_links;
 
     public function __construct() {
         $this->_set_title();
@@ -25,34 +28,59 @@ class View {
         }
     }
 
+    /**
+     * Determine which langauge would be displayed on website elements
+     * @return void
+     */
     protected function _display_lang() {
         // DISPLAY LANGUAGE SETTINGS
+        $lang_name_default = "english";
+        $lang_alias_default = "en";
         $languages = simplexml_load_file(INCLUDES.'languages.xml');
-        $eng = $languages->english;
-        $cro = $languages->croatian;
-        $get = "";
+        // get html links for available languages
+        $allowed_langs = array();
 
-        if( isset($_GET['lang']) ) {
-            switch($_GET['lang']) {
-                case "en":
-                    $this->lang = $eng;
-                    $get = $_GET['lang'];
-                break;
-
-                default: 
-                    $this->lang = $cro;
-                    $get = $_GET['lang'];
+        foreach($languages->children() as $langs) {
+            $lang_name = $langs->attributes();
+            $lang_alias = $langs->attributes()[1];
+            // convert to strings $lang_name, and $lang_alias
+            $name  = (string)$lang_name;
+            $alias = (string)$lang_alias;
+            // set availabble languages array
+            $allowed_langs[$alias] = $name;
+            
+            if( Session::get('lang') != null && empty($_GET['lang']) ) {
+                $_GET['lang'] = Session::get('lang');
             }
 
-        } else {
-            $this->lang = $cro;
-            $get = $_GET['lang'] = "hr";
-        }
-        Session::set("lang", $get);
+            if( isset($_GET['lang']) && !empty($_GET['lang']) ) {
+                // check whether the language exists in xml file
+                if( $_GET['lang'] == $alias ) {
+                    $this->lang = $languages->$lang_name;
+                    Session::set('lang', $alias);
 
-        //pretty_print($this->lang, "Lang object");
-        // set session for language
-        $get_lang = isset($_GET['lang']) ? $_GET['lang'] : 'hr';
+                } else { // language does not exists in xml file
+                    $this->lang = $languages->$lang_name_default;
+                }
+
+            } else { // $_GET is not set
+                $this->lang = $languages->$lang_name_default;
+            }
+        } // end foreach
+        // set html links for languages
+        $this->lang_html_links = $this->_lang_links($allowed_langs);
+    }
+
+    /**
+     * Set html links for available languages
+     * @return string $html
+     */
+    protected function _lang_links($langs) {
+        $html = "";
+        foreach($langs as $alias => $name) {
+            $html .= '<a class="lang-nav" href="?lang='.$alias.'">'.ucfirst($name).'</a> ';
+        }
+        return $html;
     }
     
     /**
