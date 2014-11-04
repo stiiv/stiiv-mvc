@@ -2,7 +2,7 @@
 <html lang="hr">
 <head>
 <meta charset="UTF-8" />
-	<title>Test</title>
+	<title>Default</title>
 </head>
 <body>
 
