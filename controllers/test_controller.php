@@ -14,6 +14,7 @@ class Test extends Controller {
 		);
 		$paginate = new Pagination(1,5,20);
 		Session::set("user", "stiiv85");
+		$this->data('nav::'.$this->view->lang_html_links);
 		$this->data("username::You are currently logged in as: ".Session::get("user"));
 		$this->data("print::".Session::view());
 		$sess = array(

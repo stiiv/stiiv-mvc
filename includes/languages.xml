@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languages>
+
+	<english name="english" alias="en" homeName="english">
+		<form>
+			<submit>Submit</submit>
+		</form>
+		<general>
+			<name>Name</name>
+		</general>
+		<message></message>
+		<nav>
+			<home>Home</home>
+			<aboutUs>About Us</aboutUs>
+			<contact>Contact</contact>
+		</nav>
+	</english>
+
+	<croatian name="croatian" alias="hr" homeName="hrvatski">
+		<form>
+			<submit>Pošalji</submit>
+		</form>
+		<general>
+			<name>Ime</name>
+		</general>
+		<message></message>
+		<nav>
+			<home>Naslovna</home>
+			<aboutUs>O nama</aboutUs>
+			<contact>Kontakt</contact>
+		</nav>
+	</croatian>
+
+</languages>
