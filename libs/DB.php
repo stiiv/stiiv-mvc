@@ -158,7 +158,7 @@ class DB
 	 * @param : array $fields
 	 * @return : true or false
 	 */
-	public function edit($table, $id, $fields = array()) {
+	public function update($table, $id, $fields = array()) {
 		$id = (int)$id;
 
 		if(count($fields)) {
@@ -178,7 +178,7 @@ class DB
 				$i++;
 			}
 
-			$sql .= "WHERE id = {$id} LIMIT 1"; echo $sql; die();
+			$sql .= "WHERE id = {$id} LIMIT 1";
 			if(!$this->query($sql, $fields)->error()) {
 				return true;
 			}
