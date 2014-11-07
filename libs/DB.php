@@ -8,6 +8,7 @@ class DB
 			$_PDOparam,
 			$_error = false,
 			$_insert,
+			$_edit,
 			$_delete,
 			$_count = 0,
 			$_result;
@@ -69,7 +70,7 @@ class DB
 			
 			if($this->_query->execute())
 			{
-				if(!$this->_insert && !$this->_delete)
+				if(!$this->_insert && !$this->_delete && !$this->_edit)
 				{
 					$this->_result = $this->_query->fetchAll(PDO::FETCH_OBJ); //echo "<pre>",var_dump($this->_result),"</pre>";
 				}
@@ -144,6 +145,41 @@ class DB
 			//echo $sql; //die();
 			if(!$this->query($sql, $fields)->error())
 			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Desc : edit table
+	 * @param : string $table
+	 * @param : int $id
+	 * @param : array $fields
+	 * @return : true or false
+	 */
+	public function edit($table, $id, $fields = array()) {
+		$id = (int)$id;
+
+		if(count($fields)) {
+			
+			$this->_edit = false;
+			$keys = array_keys($fields); //print_r($keys);
+			$countf = count($fields);
+			$i = 1;
+			
+			$this->_edit = true;
+			$sql  = "UPDATE {$table} SET ";
+
+			foreach($keys as $key) {
+				// make sure that there is no comma after last question mark
+				$value = ($i < $countf) ? '?, ' : '?';
+				$sql .= "{$key} = {$value} ";
+				$i++;
+			}
+
+			$sql .= "WHERE id = {$id} LIMIT 1"; echo $sql; die();
+			if(!$this->query($sql, $fields)->error()) {
 				return true;
 			}
 		}
