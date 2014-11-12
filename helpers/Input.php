@@ -39,8 +39,8 @@ class Input
 
     public function __construct() {
         $this->_allowedTypes = add_to_array_elements('image/', $this->_types);
-        $view = new View();
-        $this->lang = $view->lang;
+        $lang = new Language();
+        $this->lang = $lang->display;
     }
 
     /**
