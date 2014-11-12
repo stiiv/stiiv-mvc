@@ -7,6 +7,9 @@ class Input
  *                              UPLOAD HANDLER
  *
  ****************************************************************************/
+    
+    // multiple languages
+    public $lang;
 
     // upload information
     private $_upload_name,
@@ -27,8 +30,8 @@ class Input
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
         4 => 'No file was uploaded',
-        6 => 'Missing a temporary folder. Introduced in PHP 5.0.3',
-        7 => 'Failed to write file to disk. Introduced in PHP 5.1.0.',
+        6 => 'Missing a temporary folder',
+        7 => 'Failed to write file to disk',
         8 => 'A PHP extension stopped the file upload'
     );
 			
@@ -36,6 +39,8 @@ class Input
 
     public function __construct() {
         $this->_allowedTypes = add_to_array_elements('image/', $this->_types);
+        $view = new View();
+        $this->lang = $view->lang;
     }
 
     /**
@@ -57,7 +62,7 @@ class Input
 		}
 		elseif(!in_array($this->upload_type(), $this->_allowedTypes)) {
 			$this->errorMsg["file_type"] =
-                'Datoteka nije dozvoljenog formata! Dozvoljeni format: '.implode(',', $this->_types);
+                $this->lang->message->notAllowedFileType.implode(', ', $this->_types);
 			return false;
 		}
 		else {
@@ -72,8 +77,10 @@ class Input
     public function is_max_upload_size() {
         if( $this->upload_error() == UPLOAD_ERR_INI_SIZE || $this->upload_error() == UPLOAD_ERR_FORM_SIZE ) {
             $this->errorMsg["max_upload_size"] =
-                "Datoteka je prevelika, najveća dopuštena veličina : "
-                .$this->byte_to_mb( $this->form_max_upload_size() )." MB";
+                $this->_replace_param(
+                    $this->byte_to_mb( $this->form_max_upload_size() ),
+                    $this->lang->message->fileIsTooBig
+                );
             return false;
         }
         return true;
@@ -81,10 +88,14 @@ class Input
 
     /**
      * Value of max_file_size in bytes
-     * @return int (value of form max_file_size, 0 otherwise)
+     * @return int in bytes(value of form MAX_FILE_SIZE or upload_max_filesize in php.ini otherwise)
      */
     public function form_max_upload_size() {
-        return (int)( isset($_REQUEST["MAX_FILE_SIZE"]) && is_numeric($_REQUEST["MAX_FILE_SIZE"]) ) ? $_REQUEST["MAX_FILE_SIZE"] : 0;
+        $ini_get = ini_get("upload_max_filesize");
+        // grab only number of upload_max_filesize
+        $max_uploaded_num = substr($ini_get, 0, 1);
+        return (int)( isset($_POST["MAX_FILE_SIZE"]) && is_numeric($_POST["MAX_FILE_SIZE"]) ) 
+            ? $_POST["MAX_FILE_SIZE"] : $this->mb_to_byte($max_uploaded_num);
     }
 
     /**
@@ -118,7 +129,11 @@ class Input
 	 */
 	public function does_file_exist($path_dir) {
 		if(file_exists($path_dir.$this->upload_name())) {
-			$this->errorMsg["file_exists"] = 'Datoteka <strong>'.$this->upload_name().'</strong> već postoji';
+			$this->errorMsg["file_exists"] =
+                $this->_replace_param(
+                    $this->upload_name(),
+                    $this->lang->message->fileAlreadyExists
+                );
 			return true;
 		}
 		return false;
@@ -224,10 +239,38 @@ class Input
  ****************************************************************************/
 
     // Array of available rules
-    protected $_allowed_rules = array(
-        'required', 'email', 'minlength', 'maxlength', 'select', 'digit',
-        'match'
-    );
+    protected $_allowed_rules = array();
+
+    /**
+    * Set $this->_allowed_rules array
+    * @return array $this->_allowed_rules
+    */
+    protected function _set_allowed_rules() {
+        $this->_allowed_rules = array(
+            'required' => $this->lang->message->required,
+            'email' => $this->lang->message->noValidEmail,
+            'minlength' => $this->lang->message->tooShort, 
+            'maxlength' => $this->lang->message->tooLong,
+            'select' => $this->lang->message->noSelect, 
+            'digit' => $this->lang->message->onlyDigit,
+            'match' => array(
+                'no_match' => $this->lang->message->noMatch,
+                'satisfier_no_match' => $this->lang->message->satisfierNoMatch
+            )
+        );
+
+        return $this->_allowed_rules;
+    }
+
+    /**
+    * Replace :param: with appropriate satisfier
+    * @param mixed $replace
+    * @param string $subject
+    * @return string
+    */
+    protected function _replace_param($replace, $subject) {
+        return str_replace(':param:', $replace, $subject);
+    }
 
     /**
      * Filter given string
@@ -285,6 +328,7 @@ class Input
     protected function _validate($input, $field_name, $rules) {
         $encoding = 'UTF-8';
         // get form name="" values
+        $_REQUEST = $_POST;
         $request_keys = array_keys($_REQUEST);
 
         foreach($rules as $rule => $satisfier) {
@@ -292,42 +336,42 @@ class Input
             switch($rule) {
                 case 'required':
                     if( empty($input) ) {
-                        $this->errorMsg[$field_name][] = 'Required';
+                        $this->errorMsg[$field_name][] = $this->_allowed_rules['required'];
                         return;
                     }
                     break;
 
                 case 'email':
-                    ( !filter_var($input, FILTER_VALIDATE_EMAIL) ) ? $this->errorMsg[$field_name][] = 'Not valid email' : null;
+                    ( !filter_var($input, FILTER_VALIDATE_EMAIL) ) ? $this->errorMsg[$field_name][] = $this->_set_allowed_rules()['email'] : null;
                     break;
 
                 case 'minlength':
                     (mb_strlen($input, $encoding) <= $satisfier) ? 
-                        $this->errorMsg[$field_name][] = "Too short. At least {$satisfier} characters required" : null;
+                        $this->errorMsg[$field_name][] = $this->_replace_param($satisfier, $this->_set_allowed_rules()['minlength']) : null;
                     break;
 
                 case 'maxlength':
                     (mb_strlen($input, $encoding) >= $satisfier) ? 
-                        $this->errorMsg[$field_name][] = "Too long. Maximum {$satisfier} characters" : null;
+                        $this->errorMsg[$field_name][] = $this->_replace_param($satisfier, $this->_set_allowed_rules()['maxlength']) : null;
                     break;
 
                 case 'select':
-                    ($input < 1 || $input == null) ? $this->errorMsg[$field_name][] = 'Not selected' : null;
+                    ($input < 1 || $input == null) ? $this->errorMsg[$field_name][] = $this->_set_allowed_rules()['select'] : null;
                     break;
 
                 case 'digit':
-                    ( !is_numeric($input) ) ? $this->errorMsg[$field_name][] = 'Must contain only digits' : null;
+                    ( !is_numeric($input) ) ? $this->errorMsg[$field_name][] = $this->_set_allowed_rules()['digit'] : null;
                     break;
 
                 case 'match':
                     // check if the given satisfier is correct
                     if( !in_array($satisfier, $request_keys) ) {
-                        $this->errorMsg[$field_name][] = "Satisfier '{$satisfier}' does not match any field";
+                        $this->errorMsg[$field_name][] = $this->_replace_param($satisfier, $this->_set_allowed_rules()['match']['satisfier_no_match']);
                         return;
                     }
 
                     if( $_REQUEST[$satisfier] != $input) {
-                        $this->errorMsg[$field_name][] = 'No match';
+                        $this->errorMsg[$field_name][] = $this->_replace_param(ucfirst($satisfier), $this->_set_allowed_rules()['match']['no_match']);
                     }
                     break;
             }
@@ -340,9 +384,11 @@ class Input
      * @return boolean
      */
     protected function _rule_exists($array) {
+        // get the name of the rule
+        $rule_name = array_keys($this->_set_allowed_rules());
         if(is_array($array)) {
             foreach($array as $value) {
-                return in_array($value, $this->_allowed_rules);
+                return in_array($value, $rule_name);
             }
         }
         return false;

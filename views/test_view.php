@@ -2,7 +2,7 @@
 <html lang="hr">
 <head>
 	<meta charset="UTF-8" />
-	<title><?php echo $this->var_check($this->title); ?></title>
+	<title><?php echo $this->var_check($this->title); ?> | Stiiv-MVC</title>
 	<style type="text/css">
 		* { padding: 0; margin: 0; }
 		body {
@@ -125,7 +125,7 @@
 			</p>
 
 			<p class="bold">
-				JS: <span class="success"><?php echo IMAGES; ?></span>
+				IMAGES: <span class="success"><?php echo IMAGES; ?></span>
 			</p>
 		</section>
 

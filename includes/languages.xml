@@ -3,14 +3,32 @@
 
 	<english name="english" alias="en" homeName="english">
 		<form>
+			<save>Save</save>
 			<submit>Submit</submit>
 		</form>
-		<general>
-			<name>Name</name>
-		</general>
+		<label>
+			<dateOfBirth>Date of birth</dateOfBirth>
+			<firstName>First name</firstName>
+			<lastName>Last name</lastName>
+			<password>Password</password>
+			<password2>Retype password</password2>
+			<sex>Sex</sex>
+			<username>Username</username>
+		</label>
 		<message>
 			<DBselected>Your database name is: </DBselected>
+			<fileAlreadyExists>File ':param:' already exists</fileAlreadyExists>
+			<fileIsTooBig>File is too big, maximum allowed size is :param: MB</fileIsTooBig>
+			<notAllowedFileType>File type not allowed! Allowed types: </notAllowedFileType>
 			<noDB>Please edit database name in includes/cofig.php</noDB>
+			<noMatch>No match with ':param:'</noMatch>
+			<noSelect>Not selected</noSelect>
+			<noValidEmail>Not valid email</noValidEmail>
+			<onlyDigit>Must contain only digits</onlyDigit>
+			<required>Required field</required>
+			<satisfierNoMatch>Satisfier ':param:' does not match any field</satisfierNoMatch>
+			<tooLong>Too long. Maximum :param: characters</tooLong>
+			<tooShort>Too short. At least :param: characters required</tooShort>
 			<welcome>Welcome</welcome>
 		</message>
 		<nav>
@@ -22,14 +40,32 @@
 
 	<croatian name="croatian" alias="hr" homeName="hrvatski">
 		<form>
+			<save>Spremi</save>
 			<submit>Pošalji</submit>
 		</form>
-		<general>
-			<name>Ime</name>
-		</general>
+		<label>
+			<dateOfBirth>Datum rođenja</dateOfBirth>
+			<firstName>Ime</firstName>
+			<lastName>Prezime</lastName>
+			<password>Lozinka</password>
+			<password2>Lozinka ponovno</password2>
+			<sex>Spol</sex>
+			<username>Korisničko ime</username>
+		</label>
 		<message>
 			<DBselected>Ime Vaše baze podataka:</DBselected>
+			<fileAlreadyExists>Datoteka ':param:' već postoji</fileAlreadyExists>
+			<fileIsTooBig>Datoteka je prevelika, najveća dopuštena veličina :param: MB</fileIsTooBig>
+			<notAllowedFileType>Datoteka nije dozvoljenog formata! Dozvoljeni format: </notAllowedFileType>
 			<noDB>Molimo Vas, unseite ime baze podataka u includes/cofig.php datoteci </noDB>
+			<noMatch>Ne podudara se sa ':param:'</noMatch>
+			<noSelect>Nije označeno</noSelect>
+			<noValidEmail>E-mail nije validan</noValidEmail>
+			<onlyDigit>Mora sadržavati samo brojčane znakove</onlyDigit>
+			<required>Obavezno polje</required>
+			<satisfierNoMatch>Zadovoljavajući paramtar ':param:' ne podudara se niti sa jednim poljem</satisfierNoMatch>
+			<tooLong>Predugačko. Zahtjeva maksimalno :param: znak(a)</tooLong>
+			<tooShort>Prekratko. Zahtjeva minimalno :param: znak(a)</tooShort>
 			<welcome>Dobrodošli</welcome>
 		</message>
 		<nav>
