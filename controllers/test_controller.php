@@ -23,9 +23,7 @@ class Test extends Controller {
 		}
 	}
 
-	public function test_input() {
-		
-	}
+	public function test_input() {}
 
 }
 

@@ -66,7 +66,6 @@
 		<p class="center"><?php echo $this->var_check($lang_nav); ?></p>
 
 		<section class="section">
-			<p><?=$this->lang->form->save?></p>
 			<p class="<?php echo $this->var_check($class); ?> bold">
 				<?php echo $this->var_check($change_db); ?>
 			</p>

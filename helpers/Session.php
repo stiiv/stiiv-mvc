@@ -24,6 +24,12 @@ class Session {
 		pretty_print($_SESSION, "SESSION");
 	}
 
+	public static function delete($key) {
+		if( isset($_SESSION[$key]) ) {
+			unset($_SESSION[$key]);
+		}
+	}
+
 	public static function clean() {
 		return $_SESSION = array();
 	}
